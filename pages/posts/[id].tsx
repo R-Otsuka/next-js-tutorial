@@ -3,11 +3,11 @@ import Layout from '../../components/layout';
 import { getAllPostIds, getPostData } from '../../lib/posts';
 import Date from '../../components/date';
 import utilStyles from '../../styles/utils.module.css';
-
+import { GetStaticProps, GetStaticPaths, GetServerSideProps } from 'next';
 
 // ①このファイルではどのルーティングをする可能性があるかチェック { params: {id }}
 // ビルドする時に
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const paths = getAllPostIds();
   return {
     paths, // [{ params: { id: 'ssg-ssr' } }, { params: { id: 'pre-rendering' } }]
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
 }
 
 // 実際にデータを取ってくる { id, data }
-export async function getStaticProps({ params }) {
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const postData = await getPostData(params.id);
   return {
     props: {
@@ -24,6 +24,7 @@ export async function getStaticProps({ params }) {
     },
   };
 }
+
 
 export default function Post({ postData }) {
   return (
